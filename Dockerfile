@@ -1,7 +1,11 @@
 FROM ollama/ollama:latest
 
-# Expose Ollama API port
+# Ensure we have a shell
+SHELL ["/bin/bash", "-c"]
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 EXPOSE 11434
 
-# Start Ollama server
-CMD ["ollama", "serve"]
+CMD ["/start.sh"]

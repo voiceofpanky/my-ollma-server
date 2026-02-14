@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: ollama-llama3
+    name: my-ollama-server
     env: docker
     plan: starter
     autoDeploy: true
