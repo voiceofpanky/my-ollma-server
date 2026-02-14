@@ -12,8 +12,5 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Override Ollama's entrypoint
-ENTRYPOINT ["/bin/bash", "-c"]
-
-# Start Ollama + Node API
-CMD ["ollama serve & sleep 5 && node server.js"]
+# Start Ollama + Node together
+ENTRYPOINT ["/bin/bash", "-c", "ollama serve & sleep 5 && node server.js"]
