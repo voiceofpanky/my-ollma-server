@@ -1,11 +1,19 @@
 FROM ollama/ollama:latest
 
-# Override Ollama's ENTRYPOINT so we can run bash + scripts
+# Install Node.js
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+WORKDIR /app
+
+# Copy Node files
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# Override Ollama's entrypoint
 ENTRYPOINT ["/bin/bash", "-c"]
 
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-EXPOSE 11434
-
-CMD ["/start.sh"]
+# Start Ollama + Node API
+CMD ["ollama serve & sleep 5 && node server.js"]

@@ -1,0 +1,69 @@
+import express from "express";
+import cors from "cors";
+import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Point this to Render URL in production
+//const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
+const OLLAMA_URL = "http://localhost:11434";
+
+// Health
+app.get("/", (req, res) => {
+  res.json({ status: "ok", upstream: OLLAMA_URL });
+});
+
+// List models
+app.get("/api/models", async (req, res) => {
+  try {
+    const response = await axios.get(`${OLLAMA_URL}/api/tags`);
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Simple generate
+app.post("/api/generate", async (req, res) => {
+  const { prompt, model = "llama3" } = req.body;
+
+  try {
+    const response = await axios.post(`${OLLAMA_URL}/api/generate`, {
+      model,
+      prompt,
+      stream: false,
+    });
+
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Chat endpoint
+app.post("/api/chat", async (req, res) => {
+  const { messages, model = "llama3" } = req.body;
+
+  try {
+    const response = await axios.post(`${OLLAMA_URL}/api/chat`, {
+      model,
+      messages,
+      stream: false,
+    });
+
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Node proxy listening on port ${PORT}`);
+  console.log(`Using Ollama at: ${OLLAMA_URL}`);
+});
