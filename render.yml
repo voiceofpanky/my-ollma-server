@@ -8,6 +8,8 @@ services:
     envVars:
       - key: OLLAMA_HOST
         value: 0.0.0.0
+      - key: PORT
+        value: 11434
     healthCheckPath: /api/tags
     disk:
       name: ollama-models
