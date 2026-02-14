@@ -1,2 +1,2 @@
-# my-ollma-server
-my-ollma-server
+# ollama-claude-app
+ollama-claude-app
