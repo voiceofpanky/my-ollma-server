@@ -74,7 +74,7 @@ app.post("/api/chat", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Node proxy listening on port ${PORT}`);
   console.log(`Using Ollama at: ${OLLAMA_URL}`);
 });
