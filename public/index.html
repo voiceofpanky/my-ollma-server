@@ -108,10 +108,11 @@
 
 <script>
   const BASE_URL = "https://my-ollama-server.onrender.com"; 
+ // const BASE_URL = "http://localhost:11434"; 
   // Change to your Render URL
 
   async function listModels() {
-    console.log
+    console.log("Fetching models...");
     const res = await fetch(`${BASE_URL}/api/tags`);
     const data = await res.json();
     document.getElementById("modelsOutput").textContent = JSON.stringify(data, null, 2);
@@ -125,8 +126,9 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama3",
-        prompt: prompt
+        model: "tinyllama",
+        prompt: prompt,
+        stream: false
       })
     });
 
@@ -142,7 +144,8 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama3",
+        model: "tinyllama",
+        stream: false,
         messages: [
           { role: "user", content: message }
         ]
