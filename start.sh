@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Start Ollama in the background
+# Start Ollama server
 ollama serve &
 
-# Give Ollama time to start
+# Give Ollama time to boot
 sleep 5
 
-# Pull model (optional but recommended)
-ollama pull llama3 || true
+# Pull TinyLlama model
+ollama pull tinyllama || true
 
-# Start Node server
+# Start Node or your API server
 node server.js
