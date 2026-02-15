@@ -9,28 +9,28 @@ dotenv.config();
 const app = express();
 const __dirname = path.resolve();
 
+// Enable CORS for all routes
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (CSS, JS, images)
+// Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// Serve index.html at root
+// Serve index.html
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Point this to Render URL in production
-//const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
+// Ollama URL (internal)
 const OLLAMA_URL = "http://localhost:11434";
 
-// Health
-app.get("/", (req, res) => {
+// Health check for Render
+app.get("/health", (req, res) => {
   res.json({ status: "ok", upstream: OLLAMA_URL });
 });
 
-// List models
-app.get("/api/models", async (req, res) => {
+// FIXED: /api/tags route
+app.get("/api/tags", async (req, res) => {
   try {
     const response = await axios.get(`${OLLAMA_URL}/api/tags`);
     res.json(response.data);
@@ -39,9 +39,9 @@ app.get("/api/models", async (req, res) => {
   }
 });
 
-// Simple generate
+// Generate
 app.post("/api/generate", async (req, res) => {
-  const { prompt, model = "llama3" } = req.body;
+  const { prompt, model = "tinyllama" } = req.body;
 
   try {
     const response = await axios.post(`${OLLAMA_URL}/api/generate`, {
@@ -56,9 +56,9 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
-// Chat endpoint
+// Chat
 app.post("/api/chat", async (req, res) => {
-  const { messages, model = "llama3" } = req.body;
+  const { messages, model = "tinyllama" } = req.body;
 
   try {
     const response = await axios.post(`${OLLAMA_URL}/api/chat`, {
@@ -73,6 +73,7 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Node proxy listening on port ${PORT}`);
